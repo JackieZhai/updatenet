@@ -37,10 +37,11 @@ videosets = open('../DAVIS/ImageSets/480p/trainval.txt','r')
 videos = [line.strip() for line in videosets]
 videos.sort()
 
-template_acc = []; template_cur = []
+template_acc = []; template_cur = []; template_gt = []
 init0 = []; init = []; pre = []; gt = []  #init0 is reset init
 
 init_rect = None; tracker = build_tracker(model); num_reset = None
+tracker0 = build_tracker(model)
 for v in tqdm(range(len(videos))):
     num = int(videos[v].split('/')[-1].split('.')[0])
     try:
@@ -73,6 +74,8 @@ for v in tqdm(range(len(videos))):
     w = w - x
     h = h - y
     img_rect = [x, y, w, h]
+    tracker0.init(img, tuple(img_rect))
+    template_gt.append(tracker0.model.zf.cpu().data)
 
     if num == 0:
         num_reset = 0
@@ -118,5 +121,5 @@ for v in tqdm(range(len(videos))):
             gt.append(0)
         # ----------------
 
-np.save(temp_path+'/template.npy',template_acc); np.save(temp_path+'/templatei.npy',template_cur)
+np.save(temp_path+'/template.npy',template_acc); np.save(temp_path+'/templatei.npy',template_cur); np.save(temp_path+'/template0.npy',template_gt)
 np.save(temp_path+'/init0.npy',init0); np.save(temp_path+'/init.npy',init);np.save(temp_path+'/pre.npy',pre);np.save(temp_path+'/gt.npy',gt)
