@@ -40,7 +40,7 @@ parser.add_argument('--save', '-s', default='./work_step1_std_0_0_curisgt', type
 
 args = parser.parse_args()
 
-print args
+print(args)
 best_loss = 1e6
 
 dataram = dict()

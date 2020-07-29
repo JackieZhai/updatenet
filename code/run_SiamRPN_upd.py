@@ -181,8 +181,12 @@ def SiamRPN_track_upd(state, im, updatenet):
     #temp = np.concatenate((init, pre, cur), axis=1)
     temp = torch.cat((Variable(state['z_0']).cuda(),Variable(state['z_f']).cuda(),z_f),1)
     init_inp = Variable(state['z_0']).cuda()
-        
+
     z_f_ = updatenet(temp,init_inp)
+
+    print('updatenet input: ', temp.shape, init_inp.shape)
+    print('updatenet output: ', z_f_.shape)
+
     net.kernel(z_f_)
 
     state['z_f'] = z_f_.cpu().data
