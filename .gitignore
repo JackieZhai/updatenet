@@ -2,3 +2,4 @@
 code/__pycache__
 images
 code/SiamRPNBIG.model
+model.pth

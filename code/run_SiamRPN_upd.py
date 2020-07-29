@@ -184,8 +184,8 @@ def SiamRPN_track_upd(state, im, updatenet):
 
     z_f_ = updatenet(temp,init_inp)
 
-    print('updatenet input: ', temp.shape, init_inp.shape)
-    print('updatenet output: ', z_f_.shape)
+    # print('updatenet input: ', temp.shape, init_inp.shape)
+    # print('updatenet output: ', z_f_.shape)
 
     net.kernel(z_f_)
 

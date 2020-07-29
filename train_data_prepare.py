@@ -7,81 +7,110 @@ import numpy as np
 from os.path import realpath, dirname, join
 import os
 import pdb
+from tqdm import tqdm
 
-from net1 import SiamRPNBIG
-from run_SiamRPN1 import SiamRPN_init, SiamRPN_track
-from utils1 import get_axis_aligned_bbox,get_axis_aligned_rect, cxy_wh_2_rect, overlap_ratio
+from pysot.models.model_builder import ModelBuilder
+from pysot.tracker.tracker_builder import build_tracker
 
-# load net
-net_file = join(realpath(dirname(__file__)), 'SiamRPNBIG.model')
-net = SiamRPNBIG()
-net.load_state_dict(torch.load(net_file))
-net.eval().cuda()
-reset = 1; frame_max = 300
-setfile = 'update_set1'
-temp_path = setfile+'_templates_step1_std'
+from utils import overlap_ratio
+
+# create model
+model = ModelBuilder()
+# load model
+model.load_state_dict(torch.load('model.pth', map_location=lambda storage, loc: storage.cpu()))
+model.eval().cuda()
+
+temp_path = 'updatenet_dataset'
 if not os.path.isdir(temp_path):
     os.makedirs(temp_path)
 
-video_path = '/media/lichao/4data/tracking/datasets/LaSOTBenchmark'
-lists = open('/home/lichao/tracking/LaSOT_Evaluation_Toolkit/sequence_evaluation_config/'+setfile+'.txt','r')
-list_file = [line.strip() for line in lists]
-category = os.listdir(video_path)
-category.sort()
+videosets = open('../DAVIS/ImageSets/480p/trainval.txt','r')
+videos = [line.strip() for line in videosets]
+videos.sort()
 
 template_acc = []; template_cur = []
 init0 = []; init = []; pre = []; gt = []  #init0 is reset init
-for tmp_cat in category:
-    videos = os.listdir(join(video_path, tmp_cat)); videos.sort()    
-    for video in videos:
-        if video not in list_file:
-            continue
-        print(video)        
-        gt_path = join(video_path,tmp_cat,video, 'groundtruth.txt')
-        ground_truth = np.loadtxt(gt_path, delimiter=',')
-        num_frames = len(ground_truth)  #num_frames = min(num_frames, frame_max)
-        img_path = join(video_path,tmp_cat,video, 'img')
-        imgFiles = [join(img_path,'%08d.jpg') % i for i in range(1,num_frames+1)]
-        frame = 0
-        while frame < num_frames:
-            Polygon = ground_truth[frame]
-            cx, cy, w, h = get_axis_aligned_bbox(Polygon)
-            if w*h!=0:
-                image_file = imgFiles[frame]
-                target_pos, target_sz = np.array([cx, cy]), np.array([w, h])
-                im = cv2.imread(image_file)  # HxWxC
-                state = SiamRPN_init(im, target_pos, target_sz, net)  # init tracker
-                template_acc.append(state['z_f']); template_cur.append(state['z_f_cur'])
-                init0.append(0); init.append(frame); frame_reset=0;pre.append(0); gt.append(1)
-                while frame < (num_frames-1):
-                    frame = frame + 1; frame_reset=frame_reset+1
-                    image_file = imgFiles[frame]
-                    if not image_file:
-                        break
-                    im = cv2.imread(image_file)  # HxWxC
-                    state = SiamRPN_track(state, im)  # track
-                    #pdb.set_trace()
-                    template_acc.append(state['z_f']); template_cur.append(state['z_f_cur'])
-                    init0.append(frame_reset); init.append(frame); pre.append(1); 
-                    if frame==(num_frames-1): #last frame
-                        gt.append(0)
-                    else:
-                        gt.append(1)
-                    res = cxy_wh_2_rect(state['target_pos'], state['target_sz'])
-                    if reset:                    
-                        gt_rect = get_axis_aligned_rect(ground_truth[frame])
-                        iou = overlap_ratio(gt_rect, res)
-                        if iou<=0:
-                            break    
-            else:
-                template_acc.append(torch.zeros([1, 512, 6, 6], dtype=torch.float32))
-                template_cur.append(torch.zeros([1, 512, 6, 6], dtype=torch.float32))
-                init0.append(0); init.append(frame); pre.append(1)
-                if frame==(num_frames-1): #last frame
-                    gt.append(0)
-                else:
-                    gt.append(1)           
-            frame = frame + 1 #skip
+
+init_rect = None; tracker = None; num_reset = None
+for v in tqdm(range(len(videos))):
+    num = int(videos[v].split('/')[-1].split('.')[0])
+    try:
+        num_next = int(videos[v+1].split('/')[-1].split('.')[0])
+    except:
+        num_next = None
+    img_path = videos[v].split(' ')[0]
+    anno_path = videos[v].split(' ')[1]
+    img = cv2.imread('../DAVIS/' + img_path)
+    anno = cv2.imread('../DAVIS/' + anno_path, cv2.IMREAD_GRAYSCALE)
+    anno = anno > 0
+    anno_x = np.sum(anno, axis=1)
+    anno_y = np.sum(anno, axis=0)
+    for i in range(len(anno_x)):
+        if anno_x[i] > 0:
+            x = i
+            break
+    for i in range(len(anno_x)-1, -1, -1):
+        if anno_x[i] > 0:
+            w = i
+            break
+    for j in range(len(anno_y)):
+        if anno_y[j] > 0:
+            y = j
+            break
+    for j in range(len(anno_y)-1, -1, -1):
+        if anno_y[j] > 0:
+            h = j
+            break
+    w = w - x
+    h = h - y
+    img_rect = (x, y, w, h)
+
+    if num == 0:
+        num_reset = 0
+        init_rect = img_rect
+        # build tracker
+        tracker = build_tracker(model)
+        tracker.init(img, init_rect)
+        # ----------------
+        template_acc.append(tracker.model.zf)
+        template_cur.append(tracker.model.zf)
+        init.append(num)
+        init0.append(num_reset)
+        pre.append(0)
+        gt.append(1)
+        # ----------------
+    elif overlap_ratio(init_rect, img_rect) > 0.05:
+        num_reset += 1
+        # execute tracker
+        outputs = tracker.track(img)
+        # ----------------
+        template_acc.append(tracker.model.zf)
+        template_cur.append(outputs['xf'])
+        init.append(num)
+        init0.append(num_reset)
+        pre.append(1)
+        if num_next and (num_next != 0):
+            gt.append(1)
+        else:
+            gt.append(0)
+        # ----------------
+    else:
+        num_reset = 0
+        init_rect = img_rect
+        tracker = build_tracker(model)
+        tracker.init(img, init_rect)
+        # ----------------
+        template_acc.append(tracker.model.zf)
+        template_cur.append(tracker.model.zf)
+        init.append(num)
+        init0.append(num_reset)
+        pre.append(0)
+        if num_next and (num_next != 0):
+            gt.append(1)
+        else:
+            gt.append(0)
+        # ----------------
+
 template_acc=np.concatenate(template_acc); template_cur=np.concatenate(template_cur)
 np.save(temp_path+'/template',template_acc); np.save(temp_path+'/templatei',template_cur)
 np.save(temp_path+'/init0',init0); np.save(temp_path+'/init',init);np.save(temp_path+'/pre',pre);np.save(temp_path+'/gt',gt)
