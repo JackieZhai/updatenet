@@ -1,9 +1,5 @@
 # Learning the Model Update for Siamese Trackers
 
-## JackieZhai
-
-This also modified by me in July 28th.
-
 The paper will appear in ICCV 2019. 
 
 [arXiv](https://arxiv.org/pdf/1908.00855.pdf), [ICCV2019_openaccess](http://openaccess.thecvf.com/content_ICCV_2019/papers/Zhang_Learning_the_Model_Update_for_Siamese_Trackers_ICCV_2019_paper.pdf), [supplementary material](http://openaccess.thecvf.com/content_ICCV_2019/supplemental/Zhang_Learning_the_Model_ICCV_2019_supplemental.pdf), [poster](https://github.com/zhanglichao/updatenet/blob/master/poster/lichaoICCV19updateposter.pdf).
@@ -50,3 +46,7 @@ The [results](https://drive.google.com/drive/folders/1GhYh-R5u5paLH2Qw1MwSUW4M_k
 [2] Zheng Zhu, Qiang Wang, Bo Li, Wei Wu, Junjie Yan, Weiming Hu.
     Distractor-aware siamese networks for visual object tracking. 
     In ECCV 2018.
+
+## JackieZhai
+
+This repo was folked on July 28th.
