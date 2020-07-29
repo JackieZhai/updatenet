@@ -110,8 +110,8 @@ for v in tqdm(range(len(videos))):
         init_rect = img_rect
         tracker.init(img, tuple(init_rect))
         # ----------------
-        template_acc.append(tracker.model.zf.cpu().data)
-        template_cur.append(tracker.model.zf.cpu().data)
+        template_acc.append(tracker.model.zf.cpu().data.numpy())
+        template_cur.append(tracker.model.zf.cpu().data.numpy())
         init.append(num)
         init0.append(num_reset)
         pre.append(0)
@@ -123,6 +123,6 @@ for v in tqdm(range(len(videos))):
     if v > 5:
         break
 print(np.array(template_acc).shape)
-np.save(temp_path+'/template.npy',np.array(template_acc))
+np.save(temp_path+'/templatefdafds.npy',np.array(template_acc))
 np.save(temp_path+'/template.npy',template_acc); np.save(temp_path+'/templatei.npy',template_cur); np.save(temp_path+'/template0.npy',template_gt)
 np.save(temp_path+'/init0.npy',init0); np.save(temp_path+'/init.npy',init);np.save(temp_path+'/pre.npy',pre);np.save(temp_path+'/gt.npy',gt)
