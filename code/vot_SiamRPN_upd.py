@@ -1,7 +1,7 @@
 import vot
 from vot import Rectangle
 import sys
-import cv2  # imread
+import cv2
 import torch
 import numpy as np
 from os.path import realpath, dirname, join
@@ -51,5 +51,4 @@ while True:
     state = SiamRPN_track_upd(state, im,updatenet)
     res = cxy_wh_2_rect(state['target_pos'], state['target_sz'])
 
-    handle.report(Rectangle(res[0], res[1], res[2], res[3]))
-
+    handle.report(im, Rectangle(res[0], res[1], res[2], res[3]))

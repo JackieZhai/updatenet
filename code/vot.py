@@ -12,6 +12,7 @@
 import sys
 import copy
 import collections
+import cv2
 
 try:
     import trax
@@ -117,7 +118,7 @@ class VOT(object):
 
         return self._region
 
-    def report(self, region, confidence = 0):
+    def report(self, im, region, confidence = 0):
         """
         Report the tracking results to the client
 
@@ -133,9 +134,9 @@ class VOT(object):
             self._trax.status(tregion, {"confidence" : confidence})
         else:
             self._result.append(region)
-            print(region)
-            print(region.x, region.y, region.width, region.height)
             self._frame += 1
+            cv2.rectangle(im, (region.x, region.y), (region.width, region.height), (0, 255, 0), 3)
+            cv2.imwrite('../output/{:04d}.jpg'.format(self._frame), im)
 
     def frame(self):
         """
