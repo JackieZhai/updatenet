@@ -40,7 +40,7 @@ class TrackerConfig(object):
     exemplar_size = 127  # input z size
     instance_size = 271  # input x size (search region)
     total_stride = 8
-    score_size = (instance_size-exemplar_size)/total_stride+1
+    score_size = int((instance_size-exemplar_size)/total_stride+1)
     context_amount = 0.5  # context amount for the exemplar
     ratios = [0.33, 0.5, 1, 2, 3]
     scales = [8, ]

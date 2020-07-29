@@ -25,7 +25,7 @@ Point = collections.namedtuple('Point', ['x', 'y'])
 Polygon = collections.namedtuple('Polygon', ['points'])
 
 def parse_region(string):
-    tokens = list(map(int, string.split(',')))
+    tokens = list(map(float, string.split(',')))
     if len(tokens) == 4:
         return Rectangle(tokens[0], tokens[1], tokens[2], tokens[3])
     elif len(tokens) % 2 == 0 and len(tokens) > 4:
@@ -159,7 +159,7 @@ class VOT(object):
             if self._frame >= len(self._files):
                 return None
             return self._files[self._frame]
-
+            
     def quit(self):
         if TRAX:
             self._trax.quit()
@@ -168,7 +168,6 @@ class VOT(object):
                 for r in self._result:
                     f.write(encode_region(r))
                     f.write('\n')
-
+    
     def __del__(self):
         self.quit()
-
