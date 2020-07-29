@@ -37,7 +37,7 @@ videosets = open('../DAVIS/ImageSets/480p/trainval.txt','r')
 videos = [line.strip() for line in videosets]
 videos.sort()
 
-template_acc = []; template_cur = []; template_gt = []
+template_acc = None; template_cur = None; template_gt = None
 init0 = []; init = []; pre = []; gt = []  #init0 is reset init
 
 init_rect = None; tracker = build_tracker(model); num_reset = None
@@ -75,7 +75,10 @@ for v in tqdm(range(len(videos))):
     h = h - y
     img_rect = [x, y, w, h]
     tracker0.init(img, tuple(img_rect))
-    template_gt.append(tracker0.model.zf.cpu().data.numpy().tolist())
+    if not template_gt:
+            template_gt = tracker0.model.zf.cpu().data.numpy()
+        else:
+            np.concatenate(template_gt.append(tracker0.model.zf.cpu().data.numpy()))
 
     if num == 0:
         num_reset = 0
@@ -83,8 +86,14 @@ for v in tqdm(range(len(videos))):
         # build tracker
         tracker.init(img, tuple(init_rect))
         # ----------------
-        template_acc.append(tracker.model.zf.cpu().data.numpy().tolist())
-        template_cur.append(tracker.model.zf.cpu().data.numpy().tolist())
+        if not template_acc:
+            template_acc = tracker.model.zf.cpu().data.numpy()
+        else:
+            np.concatenate(template_acc.append(tracker.model.zf.cpu().data.numpy()))
+        if not template_cur:
+            template_cur = tracker.model.zf.cpu().data.numpy()
+        else:
+            np.concatenate(template_cur.append(tracker.model.zf.cpu().data.numpy()))
         init.append(num)
         init0.append(num_reset)
         pre.append(0)
@@ -95,8 +104,14 @@ for v in tqdm(range(len(videos))):
         # execute tracker
         outputs = tracker.track(img)
         # ----------------
-        template_acc.append(tracker.model.zf.cpu().data.numpy().tolist())
-        template_cur.append(outputs['xf'].cpu().data.numpy().tolist())
+        if not template_acc:
+            template_acc = tracker.model.zf.cpu().data.numpy()
+        else:
+            np.concatenate(template_acc.append(tracker.model.zf.cpu().data.numpy()))
+        if not template_cur:
+            template_cur = tracker.model.zf.cpu().data.numpy()
+        else:
+            np.concatenate(template_cur.append(outputs['xf'].cpu().data.numpy()))
         init.append(num)
         init0.append(num_reset)
         pre.append(1)
@@ -110,8 +125,14 @@ for v in tqdm(range(len(videos))):
         init_rect = img_rect
         tracker.init(img, tuple(init_rect))
         # ----------------
-        template_acc.append(tracker.model.zf.cpu().data.numpy().tolist())
-        template_cur.append(tracker.model.zf.cpu().data.numpy().tolist())
+        if not template_acc:
+            template_acc = tracker.model.zf.cpu().data.numpy()
+        else:
+            np.concatenate(template_acc.append(tracker.model.zf.cpu().data.numpy()))
+        if not template_cur:
+            template_cur = tracker.model.zf.cpu().data.numpy()
+        else:
+            np.concatenate(template_cur.append(tracker.model.zf.cpu().data.numpy()))
         init.append(num)
         init0.append(num_reset)
         pre.append(0)
