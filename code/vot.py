@@ -135,8 +135,7 @@ class VOT(object):
         else:
             self._result.append(region)
             self._frame += 1
-            print('im', (region.x, region.y), (region.x+region.width, region.y+region.height), (0, 255, 0), 3)
-            cv2.rectangle(im, (region.x, region.y), (region.x+region.width, region.y+region.height), (0, 255, 0), 3)
+            cv2.rectangle(im, (int(region.x), int(region.y)), (int(region.x+region.width), int(region.y+region.height)), (0, 255, 0), 3)
             cv2.imwrite('../output/{:04d}.jpg'.format(self._frame), im)
 
     def frame(self):
