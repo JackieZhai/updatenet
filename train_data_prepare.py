@@ -118,6 +118,5 @@ for v in tqdm(range(len(videos))):
             gt.append(0)
         # ----------------
 
-template_acc=np.concatenate(template_acc); template_cur=np.concatenate(template_cur)
-np.save(temp_path+'/template',template_acc); np.save(temp_path+'/templatei',template_cur)
-np.save(temp_path+'/init0',init0); np.save(temp_path+'/init',init);np.save(temp_path+'/pre',pre);np.save(temp_path+'/gt',gt)
+np.save(temp_path+'/template.npy',template_acc); np.save(temp_path+'/templatei.npy',template_cur)
+np.save(temp_path+'/init0.npy',init0); np.save(temp_path+'/init.npy',init);np.save(temp_path+'/pre.npy',pre);np.save(temp_path+'/gt.npy',gt)
