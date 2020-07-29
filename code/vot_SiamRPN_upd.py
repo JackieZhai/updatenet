@@ -31,7 +31,7 @@ updatenet.eval().cuda()
 #    net(torch.autograd.Variable(torch.FloatTensor(1, 3, 255, 255)).cuda())
 
 # start to track
-handle = vot.VOT("rectangle")
+handle = vot.VOT("polygon")
 Polygon = handle.region()
 cx, cy, w, h = get_axis_aligned_bbox(Polygon)
 
