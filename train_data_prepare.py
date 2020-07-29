@@ -9,15 +9,25 @@ import os
 import pdb
 from tqdm import tqdm
 
+from pysot.core.config import cfg
 from pysot.models.model_builder import ModelBuilder
 from pysot.tracker.tracker_builder import build_tracker
 
 from utils import overlap_ratio
 
+parser = argparse.ArgumentParser(description='tracking demo')
+parser.add_argument('--config', type=str, default='experiments/siammaske_r50_l3/config.yaml', help='config file')
+parser.add_argument('--snapshot', type=str, default='experiments/siammaske_r50_l3/model.pth', help='model name')
+parser.add_argument('--video_name', type=str, default='../updatenet/images', help='videos or image files')
+parser.add_argument('--roi', type=tuple, default=(631,315,128,123), help='(x, y, w, h')
+args = parser.parse_args()
+cfg.merge_from_file(args.config)
+cfg.CUDA = torch.cuda.is_available() and cfg.CUDA
+
 # create model
 model = ModelBuilder()
 # load model
-model.load_state_dict(torch.load('model.pth', map_location=lambda storage, loc: storage.cpu()))
+model.load_state_dict(torch.load(args.snapshot, map_location=lambda storage, loc: storage.cpu()))
 model.eval().cuda()
 
 temp_path = 'updatenet_dataset'
