@@ -1,1 +1,4 @@
 *.*~
+code/__pycache__
+images
+code/SiamRPNBIG.model

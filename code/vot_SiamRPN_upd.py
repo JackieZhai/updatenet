@@ -13,6 +13,7 @@ from utils import get_axis_aligned_bbox, cxy_wh_2_rect
 
 # load net
 net_file = join(realpath(dirname(__file__)), 'SiamRPNBIG.model')
+print(net_file)
 net = SiamRPNBIG()
 net.load_state_dict(torch.load(net_file))
 net.eval().cuda()
@@ -30,7 +31,7 @@ updatenet.eval().cuda()
 #    net(torch.autograd.Variable(torch.FloatTensor(1, 3, 255, 255)).cuda())
 
 # start to track
-handle = vot.VOT("polygon")
+handle = vot.VOT("rectangle")
 Polygon = handle.region()
 cx, cy, w, h = get_axis_aligned_bbox(Polygon)
 
