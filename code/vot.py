@@ -133,6 +133,8 @@ class VOT(object):
             self._trax.status(tregion, {"confidence" : confidence})
         else:
             self._result.append(region)
+            print(region)
+            print(region.x, region.y, region.width, region.height)
             self._frame += 1
 
     def frame(self):
