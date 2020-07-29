@@ -8,6 +8,7 @@ from os.path import realpath, dirname, join
 import os
 import pdb
 from tqdm import tqdm
+import argparse
 
 from pysot.core.config import cfg
 from pysot.models.model_builder import ModelBuilder
