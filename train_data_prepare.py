@@ -75,7 +75,7 @@ for v in tqdm(range(len(videos))):
     h = h - y
     img_rect = [x, y, w, h]
     tracker0.init(img, tuple(img_rect))
-    template_gt.append(tracker0.model.zf.cpu().data.numpy())
+    template_gt.append(tracker0.model.zf.cpu().data.numpy().tolist())
 
     if num == 0:
         num_reset = 0
@@ -83,8 +83,8 @@ for v in tqdm(range(len(videos))):
         # build tracker
         tracker.init(img, tuple(init_rect))
         # ----------------
-        template_acc.append(tracker.model.zf.cpu().data.numpy())
-        template_cur.append(tracker.model.zf.cpu().data.numpy())
+        template_acc.append(tracker.model.zf.cpu().data.numpy().tolist())
+        template_cur.append(tracker.model.zf.cpu().data.numpy().tolist())
         init.append(num)
         init0.append(num_reset)
         pre.append(0)
@@ -95,8 +95,8 @@ for v in tqdm(range(len(videos))):
         # execute tracker
         outputs = tracker.track(img)
         # ----------------
-        template_acc.append(tracker.model.zf.cpu().data.numpy())
-        template_cur.append(outputs['xf'].cpu().data.numpy())
+        template_acc.append(tracker.model.zf.cpu().data.numpy().tolist())
+        template_cur.append(outputs['xf'].cpu().data.numpy().tolist())
         init.append(num)
         init0.append(num_reset)
         pre.append(1)
@@ -110,8 +110,8 @@ for v in tqdm(range(len(videos))):
         init_rect = img_rect
         tracker.init(img, tuple(init_rect))
         # ----------------
-        template_acc.append(tracker.model.zf.cpu().data.numpy())
-        template_cur.append(tracker.model.zf.cpu().data.numpy())
+        template_acc.append(tracker.model.zf.cpu().data.numpy().tolist())
+        template_cur.append(tracker.model.zf.cpu().data.numpy().tolist())
         init.append(num)
         init0.append(num_reset)
         pre.append(0)
