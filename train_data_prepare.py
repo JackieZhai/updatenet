@@ -122,7 +122,6 @@ for v in tqdm(range(len(videos))):
         # ----------------
     if v > 5:
         break
-print(template_acc)
-np.save(temp_path+'/templatefdafds.npy',np.array(template_acc))
+
 np.save(temp_path+'/template.npy',template_acc); np.save(temp_path+'/templatei.npy',template_cur); np.save(temp_path+'/template0.npy',template_gt)
 np.save(temp_path+'/init0.npy',init0); np.save(temp_path+'/init.npy',init);np.save(temp_path+'/pre.npy',pre);np.save(temp_path+'/gt.npy',gt)
