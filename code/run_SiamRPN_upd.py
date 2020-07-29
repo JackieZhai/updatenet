@@ -23,6 +23,7 @@ def generate_anchor(total_stride, scales, ratios, score_size):
             anchor[count, 3] = hhs
             count += 1
 
+    print(type(anchor), type(score_size), type(score_size * score_size))
     anchor = np.tile(anchor, score_size * score_size)
     anchor = anchor.reshape((-1, 4))
     ori = - (score_size / 2) * total_stride
