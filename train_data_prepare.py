@@ -72,14 +72,14 @@ for v in tqdm(range(len(videos))):
             break
     w = w - x
     h = h - y
-    img_rect = (x, y, w, h)
+    img_rect = [x, y, w, h]
 
     if num == 0:
         num_reset = 0
         init_rect = img_rect
         # build tracker
         tracker = build_tracker(model)
-        tracker.init(img, init_rect)
+        tracker.init(img, tuple(init_rect))
         # ----------------
         template_acc.append(tracker.model.zf)
         template_cur.append(tracker.model.zf)
@@ -107,7 +107,7 @@ for v in tqdm(range(len(videos))):
         num_reset = 0
         init_rect = img_rect
         tracker = build_tracker(model)
-        tracker.init(img, init_rect)
+        tracker.init(img, tuple(init_rect))
         # ----------------
         template_acc.append(tracker.model.zf)
         template_cur.append(tracker.model.zf)
