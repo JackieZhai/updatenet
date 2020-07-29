@@ -23,9 +23,7 @@ def generate_anchor(total_stride, scales, ratios, score_size):
             anchor[count, 3] = hhs
             count += 1
 
-    print(type(anchor), type(score_size), type(score_size * score_size))
-    anchor = np.tile(anchor, score_size * score_size)
-    anchor = anchor.reshape((-1, 4))
+    anchor = np.tile(anchor, score_size * score_size).reshape((-1, 4))
     ori = - (score_size / 2) * total_stride
     xx, yy = np.meshgrid([ori + total_stride * dx for dx in range(score_size)],
                          [ori + total_stride * dy for dy in range(score_size)])
@@ -116,7 +114,7 @@ def SiamRPN_init(im, target_pos, target_sz, net):
     else:
         p.instance_size = 271
 
-    p.score_size = (p.instance_size - p.exemplar_size) / p.total_stride + 1
+    p.score_size = int((p.instance_size - p.exemplar_size) / p.total_stride + 1)
 
     p.anchor = generate_anchor(p.total_stride, p.scales, p.ratios, p.score_size)
 
