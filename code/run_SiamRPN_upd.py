@@ -23,7 +23,8 @@ def generate_anchor(total_stride, scales, ratios, score_size):
             anchor[count, 3] = hhs
             count += 1
 
-    anchor = np.tile(anchor, score_size * score_size).reshape((-1, 4))
+    anchor = np.tile(anchor, score_size * score_size)
+    anchor = anchor.reshape((-1, 4))
     ori = - (score_size / 2) * total_stride
     xx, yy = np.meshgrid([ori + total_stride * dx for dx in range(score_size)],
                          [ori + total_stride * dy for dy in range(score_size)])
@@ -40,7 +41,7 @@ class TrackerConfig(object):
     exemplar_size = 127  # input z size
     instance_size = 271  # input x size (search region)
     total_stride = 8
-    score_size = int((instance_size-exemplar_size)/total_stride+1)
+    score_size = (instance_size-exemplar_size)/total_stride+1
     context_amount = 0.5  # context amount for the exemplar
     ratios = [0.33, 0.5, 1, 2, 3]
     scales = [8, ]
