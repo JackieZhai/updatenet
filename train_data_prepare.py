@@ -40,7 +40,7 @@ videos.sort()
 template_acc = []; template_cur = []
 init0 = []; init = []; pre = []; gt = []  #init0 is reset init
 
-init_rect = None; tracker = None; num_reset = None
+init_rect = None; tracker = build_tracker(model); num_reset = None
 for v in tqdm(range(len(videos))):
     num = int(videos[v].split('/')[-1].split('.')[0])
     try:
@@ -78,8 +78,6 @@ for v in tqdm(range(len(videos))):
         num_reset = 0
         init_rect = img_rect
         # build tracker
-        torch.cuda.empty_cache()
-        tracker = build_tracker(model)
         tracker.init(img, tuple(init_rect))
         # ----------------
         template_acc.append(tracker.model.zf)
@@ -107,7 +105,6 @@ for v in tqdm(range(len(videos))):
     else:
         num_reset = 0
         init_rect = img_rect
-        tracker = build_tracker(model)
         tracker.init(img, tuple(init_rect))
         # ----------------
         template_acc.append(tracker.model.zf)
