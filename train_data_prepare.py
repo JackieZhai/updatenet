@@ -80,8 +80,8 @@ for v in tqdm(range(len(videos))):
         # build tracker
         tracker.init(img, tuple(init_rect))
         # ----------------
-        template_acc.append(tracker.model.zf)
-        template_cur.append(tracker.model.zf)
+        template_acc.append(tracker.model.zf.cpu().data)
+        template_cur.append(tracker.model.zf.cpu().data)
         init.append(num)
         init0.append(num_reset)
         pre.append(0)
@@ -92,8 +92,8 @@ for v in tqdm(range(len(videos))):
         # execute tracker
         outputs = tracker.track(img)
         # ----------------
-        template_acc.append(tracker.model.zf)
-        template_cur.append(outputs['xf'])
+        template_acc.append(tracker.model.zf.cpu().data)
+        template_cur.append(outputs['xf'].cpu().data)
         init.append(num)
         init0.append(num_reset)
         pre.append(1)
@@ -107,8 +107,8 @@ for v in tqdm(range(len(videos))):
         init_rect = img_rect
         tracker.init(img, tuple(init_rect))
         # ----------------
-        template_acc.append(tracker.model.zf)
-        template_cur.append(tracker.model.zf)
+        template_acc.append(tracker.model.zf.cpu().data)
+        template_cur.append(tracker.model.zf.cpu().data)
         init.append(num)
         init0.append(num_reset)
         pre.append(0)
