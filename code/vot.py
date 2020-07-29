@@ -26,6 +26,7 @@ Polygon = collections.namedtuple('Polygon', ['points'])
 
 def parse_region(string):
     tokens = map(float, string.split(','))
+    print(tokens)
     if len(tokens) == 4:
         return Rectangle(tokens[0], tokens[1], tokens[2], tokens[3])
     elif len(tokens) % 2 == 0 and len(tokens) > 4:
