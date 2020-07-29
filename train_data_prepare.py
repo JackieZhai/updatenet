@@ -78,6 +78,7 @@ for v in tqdm(range(len(videos))):
         num_reset = 0
         init_rect = img_rect
         # build tracker
+        torch.cuda.empty_cache()
         tracker = build_tracker(model)
         tracker.init(img, tuple(init_rect))
         # ----------------
