@@ -88,7 +88,7 @@ for v in tqdm(range(len(videos))):
         pre.append(0)
         gt.append(1)
         # ----------------
-    elif overlap_ratio(init_rect, img_rect) > 0.05:
+    elif overlap_ratio(np.array(init_rect), np.array(img_rect)) > 0.05:
         num_reset += 1
         # execute tracker
         outputs = tracker.track(img)
