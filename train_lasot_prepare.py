@@ -99,7 +99,7 @@ for tmp_cat in category:
                             template_gt = tracker0.model.zf.cpu().data.numpy()
                         else:
                             template_gt = np.concatenate((template_gt, tracker0.model.zf.cpu().data.numpy()))
-                        iou = overlap_ratio(gt_Polygen, outputs['bbox'])
+                        iou = overlap_ratio(np.array(gt_Polygen), np.array(outputs['bbox']))
                         if iou <= 0:
                             break    
             else:
