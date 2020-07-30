@@ -16,7 +16,7 @@ import time
 import pdb
 
 parser = argparse.ArgumentParser(description='Training DCFNet in Pytorch 0.4.0')
-parser.add_argument('--input_sz', dest='input_sz', default=125, type=int, help='crop input size')
+parser.add_argument('--input_sz', dest='input_sz', default=127, type=int, help='crop input size')
 parser.add_argument('--padding', dest='padding', default=2.0, type=float, help='crop padding size')
 parser.add_argument('--range', dest='range', default=10, type=int, help='select range')
 parser.add_argument('--epochs', default=50, type=int, metavar='N',
@@ -36,7 +36,7 @@ parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
 parser.add_argument('--weight-decay', '--wd', default=5e-5, type=float,
                     metavar='W', help='weight decay (default: 5e-5)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
-parser.add_argument('--save', '-s', default='./work_step1_std_0_0_curisgt', type=str, help='directory for saving')
+parser.add_argument('--save', '-s', default='./updatenet_trainoutput/', type=str, help='directory for saving')
 
 args = parser.parse_args()
 
@@ -44,9 +44,8 @@ print(args)
 best_loss = 1e6
 
 dataram = dict()
-tem0_path = '/home/lichao/projects/DaSiamRPN/code/templates'
-tem_path = '/home/lichao/projects/DaSiamRPN/code/templates_0_0'
-dataram['template0'] = np.load(join(tem0_path,'template0.npy'))
+tem_path = 'updatenet/dataset/'
+dataram['template0'] = np.load(join(tem_path,'template0.npy'))
 dataram['template'] = np.load(join(tem_path,'template.npy'))
 dataram['templatei'] = np.load(join(tem_path,'templatei.npy'))
 
@@ -54,20 +53,6 @@ dataram['pre'] = np.load(join(tem_path,'pre.npy'))
 dataram['gt'] = np.load(join(tem_path,'gt.npy'))
 dataram['init0'] = np.load(join(tem_path,'init0.npy'))
 dataram['train'] = np.arange(len(dataram['gt']), dtype=np.int)
-
-# optionally resume from a checkpoint
-if args.resume:
-    if isfile(args.resume):
-        print("=> loading checkpoint '{}'".format(args.resume))
-        checkpoint = torch.load(args.resume)
-        args.start_epoch = checkpoint['epoch']
-        best_loss = checkpoint['best_loss']
-        model.load_state_dict(checkpoint['state_dict'])
-        optimizer.load_state_dict(checkpoint['optimizer'])
-        print("=> loaded checkpoint '{}' (epoch {})"
-              .format(args.resume, checkpoint['epoch']))
-    else:
-        print("=> no checkpoint found at '{}'".format(args.resume))
 
 cudnn.benchmark = True
 
@@ -117,6 +102,21 @@ for ii in np.arange(0,lrs.shape[0]):
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                             momentum=args.momentum,
                             weight_decay=args.weight_decay)
+
+    # optionally resume from a checkpoint
+    if args.resume:
+        if isfile(args.resume):
+            print("=> loading checkpoint '{}'".format(args.resume))
+            checkpoint = torch.load(args.resume)
+            args.start_epoch = checkpoint['epoch']
+            best_loss = checkpoint['best_loss']
+            model.load_state_dict(checkpoint['state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer'])
+            print("=> loaded checkpoint '{}' (epoch {})"
+                .format(args.resume, checkpoint['epoch']))
+        else:
+            print("=> no checkpoint found at '{}'".format(args.resume))
+
     for epoch in range(args.start_epoch, args.epochs):
         adjust_learning_rate(optimizer, epoch, lrs[ii])
         losses = AverageMeter()
