@@ -43,9 +43,9 @@ init0 = []; init = []; pre = []; gt = []  #init0 is reset init
 init_rect = None; tracker = build_tracker(model); num_reset = None
 tracker0 = build_tracker(model)
 for tmp_cat in category:
+    print(tmp_cat)
     videos = os.listdir(join(video_path, tmp_cat)); videos.sort()    
     for video in tqdm(videos):
-        print(video)        
         gt_path = join(video_path,tmp_cat,video, 'groundtruth.txt')
         ground_truth = np.loadtxt(gt_path, delimiter=',')
         num_frames = len(ground_truth)

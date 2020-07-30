@@ -91,7 +91,7 @@ def save_checkpoint(state, epoch,lr, filename=join(save_path, 'checkpoint.pth.ta
         filename=join(epo_path, 'checkpoint{}.pth.tar'.format(epoch+1))
         torch.save(state, filename)    
 
-lrs = np.array([[3, 3], [3, 4], [4, 4], [4, 6]])
+lrs = np.array([[4, 6], [4, 4], [3, 4], [3, 3]])
 
 for ii in np.arange(0,lrs.shape[0]):
     # construct model
