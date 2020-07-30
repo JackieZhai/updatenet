@@ -53,3 +53,4 @@ This repo was folked on July 28th.
 
 1. Based on DaSiamRPN from foolwood.
 2. Add PySOT, need to run `python setup.py build_ext --inplace`.
+3. The UpdateNetRes fit into [1, 256, 7, 7] size of features.

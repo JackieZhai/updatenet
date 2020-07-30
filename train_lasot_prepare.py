@@ -114,6 +114,9 @@ for tmp_cat in category:
                 else:
                     gt.append(1)           
             frame = frame + 1 #skip
-
-np.save(temp_path+'/template.npy',template_acc); np.save(temp_path+'/templatei.npy',template_cur); np.save(temp_path+'/template0.npy',template_gt)
-np.save(temp_path+'/init0.npy',init0); np.save(temp_path+'/init.npy',init);np.save(temp_path+'/pre.npy',pre);np.save(temp_path+'/gt.npy',gt)
+        
+        temp_video_path = temp_path + '/' + video
+        if not os.path.isdir(temp_video_path):
+            os.makedirs(temp_video_path)
+        np.save(temp_video_path+'/template.npy',template_acc); np.save(temp_video_path+'/templatei.npy',template_cur); np.save(temp_video_path+'/template0.npy',template_gt)
+        np.save(temp_video_path+'/init0.npy',init0); np.save(temp_video_path+'/init.npy',init);np.save(temp_video_path+'/pre.npy',pre);np.save(temp_video_path+'/gt.npy',gt)
