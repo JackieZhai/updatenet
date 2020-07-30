@@ -93,19 +93,21 @@ for tmp_cat in category:
                     else:
                         gt.append(1)
                     if reset:                    
-                        gt_Polygen = ground_truth[frame]
-                        print(im.shape, gt_Polygen)
-                        tracker0.init(im, tuple(gt_Polygen))
-                        if template_gt is None:
-                            template_gt = tracker0.model.zf.cpu().data.numpy()
+                        gt_Polygon = ground_truth[frame]
+                        if gt_Polygon[2] * gt_Polygon[3] != 0:
+                            tracker0.init(im, tuple(gt_Polygon))
+                            if template_gt is None:
+                                template_gt = tracker0.model.zf.cpu().data.numpy()
+                            else:
+                                template_gt = np.concatenate((template_gt, tracker0.model.zf.cpu().data.numpy()))
                         else:
-                            template_gt = np.concatenate((template_gt, tracker0.model.zf.cpu().data.numpy()))
-                        iou = overlap_ratio(np.array(gt_Polygen), np.array(outputs['bbox']))
+                            template_gt = np.concatenate((template_gt, np.zeros([1, 256, 7, 7])))
+                        iou = overlap_ratio(np.array(gt_Polygon), np.array(outputs['bbox']))
                         if iou <= 0:
                             break    
             else:
-                template_acc = np.concatenate((template_acc, torch.zeros([1, 512, 6, 6], dtype=torch.float32)))
-                template_cur = np.concatenate((template_cur, torch.zeros([1, 512, 6, 6], dtype=torch.float32)))
+                template_acc = np.concatenate((template_acc, np.zeros([1, 256, 7, 7])))
+                template_cur = np.concatenate((template_cur, np.zeros([1, 256, 7, 7])))
                 init0.append(0); init.append(frame); pre.append(1)
                 if frame==(num_frames-1): #last frame
                     gt.append(0)
