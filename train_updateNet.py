@@ -19,11 +19,11 @@ parser = argparse.ArgumentParser(description='Training DCFNet in Pytorch 0.4.0')
 parser.add_argument('--input_sz', dest='input_sz', default=127, type=int, help='crop input size')
 parser.add_argument('--padding', dest='padding', default=2.0, type=float, help='crop padding size')
 parser.add_argument('--range', dest='range', default=10, type=int, help='select range')
-parser.add_argument('--epochs', default=50, type=int, metavar='N',
+parser.add_argument('--epochs', default=100, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
-parser.add_argument('--print-freq', '-p', default=100, type=int,
+parser.add_argument('--print-freq', '-p', default=200, type=int,
                     metavar='N', help='print frequency (default: 10)')
 parser.add_argument('-j', '--workers', default=8, type=int, metavar='N',
                     help='number of data loading workers (default: 8)')
@@ -83,8 +83,7 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 def save_checkpoint(state, epoch,lr, filename=join(save_path, 'checkpoint.pth.tar')):
-    name0 = 'lr' + str(lr[0])+str(lr[1])
-    name0 = name0.replace('.','_')
+    name0 = 'lr-' + str(int(lr[0])) + '-' + str(int(lr[1]))
     epo_path = join(save_path, name0)
     if not isdir(epo_path):
         makedirs(epo_path)
@@ -92,7 +91,7 @@ def save_checkpoint(state, epoch,lr, filename=join(save_path, 'checkpoint.pth.ta
         filename=join(epo_path, 'checkpoint{}.pth.tar'.format(epoch+1))
         torch.save(state, filename)    
 
-lrs = np.array([[4, 6],[4, 7],[4.5, 5],[4.5, 6],[4.5, 7],[5, 5],[5, 6],[5, 7],[5, 8],[6, 6],[6, 7],[6, 8],[7, 7],[7, 8],[6.5, 6.5],[6.5, 7],[6.5, 8],[7, 9],[7, 10],[8, 8],[8, 9],[9, 9],[9, 10],[10, 10]])
+lrs = np.array([[1, 1], [1, 2], [2, 2], [2, 4], [4, 4], [4, 6]])
 
 for ii in np.arange(0,lrs.shape[0]):
     # construct model
