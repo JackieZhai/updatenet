@@ -1,5 +1,4 @@
 import vot
-from vot import Rectangle
 import sys
 import cv2  # imread
 import torch
@@ -55,17 +54,15 @@ for tmp_cat in category:
         frame = 0
         while frame < num_frames:
             Polygon = ground_truth[frame]
-            print(Polygon)
-            cx, cy, w, h = get_axis_aligned_bbox(Polygon)
-            if w*h!=0:
+            if Polygon[2] * Polygon[3] != 0:
                 image_file = imgFiles[frame]
                 im = cv2.imread(image_file)  # HxWxC
-                tracker0.init(im, (cx, cy, w, h))
+                tracker0.init(im, tuple(Polygon))
                 if template_gt is None:
                     template_gt = tracker0.model.zf.cpu().data.numpy()
                 else:
                     template_gt = np.concatenate((template_gt, tracker0.model.zf.cpu().data.numpy()))
-                tracker.init(im, (cx, cy, w, h))
+                tracker.init(im, tuple(Polygon))
                 if template_acc is None:
                     template_acc = tracker.model.zf.cpu().data.numpy()
                 else:
@@ -96,18 +93,18 @@ for tmp_cat in category:
                     else:
                         gt.append(1)
                     if reset:                    
-                        gt_rect = get_axis_aligned_bbox(ground_truth[frame])
-                        tracker0.init(im, tuple(gt_rect))
+                        gt_Polygen = ground_truth[frame]
+                        tracker0.init(im, tuple(gt_Polygen))
                         if template_gt is None:
                             template_gt = tracker0.model.zf.cpu().data.numpy()
                         else:
                             template_gt = np.concatenate((template_gt, tracker0.model.zf.cpu().data.numpy()))
-                        iou = overlap_ratio(gt_rect, outputs['bbox'])
+                        iou = overlap_ratio(gt_Polygen, outputs['bbox'])
                         if iou <= 0:
                             break    
             else:
-                template_acc.append(torch.zeros([1, 512, 6, 6], dtype=torch.float32))
-                template_cur.append(torch.zeros([1, 512, 6, 6], dtype=torch.float32))
+                template_acc = np.concatenate((template_acc, torch.zeros([1, 512, 6, 6], dtype=torch.float32)))
+                template_cur = np.concatenate((template_cur, torch.zeros([1, 512, 6, 6], dtype=torch.float32)))
                 init0.append(0); init.append(frame); pre.append(1)
                 if frame==(num_frames-1): #last frame
                     gt.append(0)
