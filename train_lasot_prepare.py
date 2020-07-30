@@ -55,6 +55,7 @@ for tmp_cat in category:
         frame = 0
         while frame < num_frames:
             Polygon = ground_truth[frame]
+            print(Polygon)
             cx, cy, w, h = get_axis_aligned_bbox(Polygon)
             if w*h!=0:
                 image_file = imgFiles[frame]
@@ -89,7 +90,7 @@ for tmp_cat in category:
                         template_cur = tracker.model.zf.cpu().data.numpy()
                     else:
                         template_cur = np.concatenate((template_cur, outputs['zf_cur'].cpu().data.numpy()))
-                    init0.append(frame_reset); init.append(frame); pre.append(1); 
+                    init0.append(frame_reset); init.append(frame); pre.append(1)
                     if frame==(num_frames-1): #last frame
                         gt.append(0)
                     else:
