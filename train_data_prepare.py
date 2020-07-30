@@ -76,9 +76,9 @@ for v in tqdm(range(len(videos))):
     img_rect = [x, y, w, h]
     tracker0.init(img, tuple(img_rect))
     if not template_gt:
-            template_gt = tracker0.model.zf.cpu().data.numpy()
-        else:
-            np.concatenate(template_gt.append(tracker0.model.zf.cpu().data.numpy()))
+        template_gt = tracker0.model.zf.cpu().data.numpy()
+    else:
+        np.concatenate(template_gt.append(tracker0.model.zf.cpu().data.numpy()))
 
     if num == 0:
         num_reset = 0
