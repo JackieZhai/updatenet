@@ -88,12 +88,13 @@ for tmp_cat in category:
                     else:
                         template_cur = np.concatenate((template_cur, outputs['zf_cur'].cpu().data.numpy()))
                     init0.append(frame_reset); init.append(frame); pre.append(1)
-                    if frame==(num_frames-1): #last frame
+                    if frame == (num_frames-1): #last frame
                         gt.append(0)
                     else:
                         gt.append(1)
                     if reset:                    
                         gt_Polygen = ground_truth[frame]
+                        print(im.shape, gt_Polygen)
                         tracker0.init(im, tuple(gt_Polygen))
                         if template_gt is None:
                             template_gt = tracker0.model.zf.cpu().data.numpy()
