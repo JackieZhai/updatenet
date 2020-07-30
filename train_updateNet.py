@@ -152,7 +152,7 @@ for ii in np.arange(0,lrs.shape[0]):
             loss = criterion(output, target)/target.size(0)
 
             # measure accuracy and record loss            
-            losses.update(loss.cpu().data.numpy().tolist()[0])
+            losses.update(loss.cpu().data.numpy().tolist())
 
             # compute gradient and do SGD step
             optimizer.zero_grad()

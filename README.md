@@ -52,3 +52,4 @@ The [results](https://drive.google.com/drive/folders/1GhYh-R5u5paLH2Qw1MwSUW4M_k
 This repo was folked on July 28th.
 
 1. Based on DaSiamRPN from foolwood.
+2. Add PySOT, need to run `python setup.py build_ext --inplace`.
