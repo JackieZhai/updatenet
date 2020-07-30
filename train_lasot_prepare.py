@@ -14,7 +14,7 @@ from pysot.core.config import cfg
 from pysot.models.model_builder import ModelBuilder
 from pysot.tracker.tracker_builder import build_tracker
 
-from utils1 import get_axis_aligned_bbox,get_axis_aligned_rect, cxy_wh_2_rect, overlap_ratio
+from utils import get_axis_aligned_bbox, cxy_wh_2_rect, overlap_ratio
 
 parser = argparse.ArgumentParser(description='tracking demo')
 parser.add_argument('--config', type=str, default='experiments/siammaske_r50_l3/config.yaml', help='config file')
@@ -95,7 +95,7 @@ for tmp_cat in category:
                     else:
                         gt.append(1)
                     if reset:                    
-                        gt_rect = get_axis_aligned_rect(ground_truth[frame])
+                        gt_rect = get_axis_aligned_bbox(ground_truth[frame])
                         tracker0.init(im, tuple(gt_rect))
                         if template_gt is None:
                             template_gt = tracker0.model.zf.cpu().data.numpy()
