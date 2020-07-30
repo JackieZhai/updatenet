@@ -44,7 +44,7 @@ print(args)
 best_loss = 1e6
 
 dataram = dict()
-tem_path = 'updatenet/dataset/'
+tem_path = 'updatenet_dataset/'
 dataram['template0'] = np.load(join(tem_path,'template0.npy'))
 dataram['template'] = np.load(join(tem_path,'template.npy'))
 dataram['templatei'] = np.load(join(tem_path,'templatei.npy'))
