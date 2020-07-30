@@ -29,7 +29,7 @@ model = ModelBuilder()
 model.load_state_dict(torch.load(args.snapshot, map_location=lambda storage, loc: storage.cpu()))
 model.eval().cuda()
 
-temp_path = 'updatenet_dataset'
+temp_path = 'updatenet_davis_dataset'
 if not os.path.isdir(temp_path):
     os.makedirs(temp_path)
 
