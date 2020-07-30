@@ -111,7 +111,7 @@ for v in tqdm(range(len(videos))):
         if template_cur is None:
             template_cur = tracker.model.zf.cpu().data.numpy()
         else:
-            np.concatenate((template_cur, outputs['xf'].cpu().data.numpy()))
+            np.concatenate((template_cur, outputs['zf_cur'].cpu().data.numpy()))
         init.append(num)
         init0.append(num_reset)
         pre.append(1)
