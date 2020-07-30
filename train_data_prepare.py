@@ -75,7 +75,7 @@ for v in tqdm(range(len(videos))):
     h = h - y
     img_rect = [x, y, w, h]
     tracker0.init(img, tuple(img_rect))
-    if not template_gt:
+    if template_gt is None:
         template_gt = tracker0.model.zf.cpu().data.numpy()
     else:
         np.concatenate(template_gt.append(tracker0.model.zf.cpu().data.numpy()))
@@ -86,11 +86,11 @@ for v in tqdm(range(len(videos))):
         # build tracker
         tracker.init(img, tuple(init_rect))
         # ----------------
-        if not template_acc:
+        if template_acc is None:
             template_acc = tracker.model.zf.cpu().data.numpy()
         else:
             np.concatenate(template_acc.append(tracker.model.zf.cpu().data.numpy()))
-        if not template_cur:
+        if template_cur is None:
             template_cur = tracker.model.zf.cpu().data.numpy()
         else:
             np.concatenate(template_cur.append(tracker.model.zf.cpu().data.numpy()))
@@ -104,11 +104,11 @@ for v in tqdm(range(len(videos))):
         # execute tracker
         outputs = tracker.track(img)
         # ----------------
-        if not template_acc:
+        if template_acc is None:
             template_acc = tracker.model.zf.cpu().data.numpy()
         else:
             np.concatenate(template_acc.append(tracker.model.zf.cpu().data.numpy()))
-        if not template_cur:
+        if template_cur is None:
             template_cur = tracker.model.zf.cpu().data.numpy()
         else:
             np.concatenate(template_cur.append(outputs['xf'].cpu().data.numpy()))
@@ -125,11 +125,11 @@ for v in tqdm(range(len(videos))):
         init_rect = img_rect
         tracker.init(img, tuple(init_rect))
         # ----------------
-        if not template_acc:
+        if template_acc is None:
             template_acc = tracker.model.zf.cpu().data.numpy()
         else:
             np.concatenate(template_acc.append(tracker.model.zf.cpu().data.numpy()))
-        if not template_cur:
+        if template_cur is None:
             template_cur = tracker.model.zf.cpu().data.numpy()
         else:
             np.concatenate(template_cur.append(tracker.model.zf.cpu().data.numpy()))
