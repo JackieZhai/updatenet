@@ -34,7 +34,7 @@ parser.add_argument('--weight-decay', '--wd', default=5e-5, type=float,
                     metavar='W', help='weight decay (default: 5e-5)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--save', '-s', default='./updatenet_trainoutput/', type=str, help='directory for saving')
-parser.add_argument('--save-rate', default=5, type=int, metavar='N', help='number of epochs to save')
+parser.add_argument('--save-rate', default=1, type=int, metavar='N', help='number of epochs to save')
 
 args = parser.parse_args()
 
@@ -66,7 +66,7 @@ for tem_post in tem_path_list:
             dataram['init0'] = np.concatenate((dataram['init0'], np.load(join(tem_path, tem_post,'init0.npy'))))
         except:
             print('Read .npy Over.')
-    break
+    # break
 dataram['train'] = np.arange(len(dataram['gt']), dtype=np.int)
 print(dataram['init0'].shape)
 

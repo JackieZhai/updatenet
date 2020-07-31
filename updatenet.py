@@ -19,7 +19,10 @@ class UpdateResNet(nn.Module):
         # x0 is residual
         response = self.update1(x)
         x1 = x[:,256:512,:,:]
+        x2 = x[:,512:768,:,:]
         response = torch.cat([response, x1], dim=1)
+        response = self.update2(response)
+        response = torch.cat([response, x2], dim=1)
         response = self.update2(response)
         response += x0
         return response
