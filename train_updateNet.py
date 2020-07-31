@@ -117,6 +117,7 @@ for ii in np.arange(0,lrs.shape[0]):
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                             momentum=args.momentum,
                             weight_decay=args.weight_decay)
+    optimizer_adam = torch.optim.Adam(model.parameters())
 
     # optionally resume from a checkpoint
     if args.resume:
@@ -170,9 +171,10 @@ for ii in np.arange(0,lrs.shape[0]):
             losses.update(loss.cpu().data.numpy().tolist())
 
             # compute gradient and do SGD step
-            optimizer.zero_grad()
+            # choose from SGD and Adam
+            optimizer_adam.zero_grad()
             loss.backward()
-            optimizer.step()
+            optimizer_adam.step()
             if t % args.print_freq == 0:
                 print('Epoch: [{0}][{1}/{2}]\t'
                       'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(
