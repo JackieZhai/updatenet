@@ -123,12 +123,12 @@ for ii in np.arange(0,lrs.shape[0]):
         if isfile(args.resume):
             print("=> loading checkpoint '{}'".format(args.resume))
             checkpoint = torch.load(args.resume)
-            args.start_epoch = checkpoint['epoch']
-            best_loss = checkpoint['best_loss']
+            # args.start_epoch = checkpoint['epoch']
+            # best_loss = checkpoint['best_loss']
             model.load_state_dict(checkpoint['state_dict'])
-            optimizer.load_state_dict(checkpoint['optimizer'])
-            print("=> loaded checkpoint '{}' (epoch {})"
-                .format(args.resume, checkpoint['epoch']))
+            # optimizer.load_state_dict(checkpoint['optimizer'])
+            # print("=> loaded checkpoint '{}' (epoch {})"
+            #     .format(args.resume, checkpoint['epoch']))
         else:
             print("=> no checkpoint found at '{}'".format(args.resume))
 
