@@ -15,11 +15,8 @@ import time
 #from scipy import io
 import pdb
 
-parser = argparse.ArgumentParser(description='Training DCFNet in Pytorch 0.4.0')
-parser.add_argument('--input_sz', dest='input_sz', default=127, type=int, help='crop input size')
-parser.add_argument('--padding', dest='padding', default=2.0, type=float, help='crop padding size')
-parser.add_argument('--range', dest='range', default=10, type=int, help='select range')
-parser.add_argument('--epochs', default=100, type=int, metavar='N',
+parser = argparse.ArgumentParser(description='Training UpdateNetRes by JackieZhai')
+parser.add_argument('--epochs', default=50, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
@@ -37,6 +34,7 @@ parser.add_argument('--weight-decay', '--wd', default=5e-5, type=float,
                     metavar='W', help='weight decay (default: 5e-5)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--save', '-s', default='./updatenet_trainoutput/', type=str, help='directory for saving')
+parser.add_argument('--save-rate', default=5, type=int, metavar='N', help='number of epochs to save')
 
 args = parser.parse_args()
 
@@ -49,6 +47,7 @@ tem_path_list = listdir(tem_path)
 tem_path_list.sort()
 first_tem = True
 for tem_post in tem_path_list:
+    print('Read: ' + tem_post)
     if first_tem:
         dataram['template0'] = np.load(join(tem_path, tem_post, 'template0.npy'))
         dataram['template'] = np.load(join(tem_path, tem_post,'template.npy'))
@@ -103,7 +102,7 @@ def save_checkpoint(state, epoch,lr, filename=join(save_path, 'checkpoint.pth.ta
     epo_path = join(save_path, name0)
     if not isdir(epo_path):
         makedirs(epo_path)
-    if (epoch+1) % 5 == 0:
+    if (epoch+1) % args.save_rate == 0:
         filename=join(epo_path, 'checkpoint{}.pth.tar'.format(epoch+1))
         torch.save(state, filename)    
 
@@ -177,4 +176,4 @@ for ii in np.arange(0,lrs.shape[0]):
                 print('Epoch: [{0}][{1}/{2}]\t'
                       'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(
                        str(epoch).zfill(2), str(t).zfill(5), len(subset), loss=losses))     
-        save_checkpoint({'state_dict': model.state_dict()}, epoch,lrs[ii])        
+        save_checkpoint({'state_dict': model.state_dict()}, epoch, lrs[ii])        
