@@ -66,6 +66,7 @@ for tem_post in tem_path_list:
             dataram['init0'] = np.concatenate((dataram['init0'], np.load(join(tem_path, tem_post,'init0.npy'))))
         except:
             print('Read .npy Over.')
+    break
 dataram['train'] = np.arange(len(dataram['gt']), dtype=np.int)
 print(dataram['init0'].shape)
 
@@ -115,7 +116,7 @@ for ii in np.arange(0,lrs.shape[0]):
     criterion = nn.MSELoss(size_average=False).cuda()
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                             momentum=args.momentum,
-                            weight_decay=args.weight_decay)
+                            weight_decay=args.weight_decay).cuda()
 
     # optionally resume from a checkpoint
     if args.resume:
