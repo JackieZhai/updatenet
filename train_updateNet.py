@@ -1,7 +1,7 @@
 import argparse
 import shutil
 from os.path import join, isdir, isfile
-from os import makedirs
+from os import makedirs, listdir
 
 #from dataset import VID
 from updatenet import UpdateResNet
@@ -45,14 +45,29 @@ best_loss = 1e6
 
 dataram = dict()
 tem_path = 'updatenet_dataset/'
-dataram['template0'] = np.load(join(tem_path,'template0.npy'))
-dataram['template'] = np.load(join(tem_path,'template.npy'))
-dataram['templatei'] = np.load(join(tem_path,'templatei.npy'))
-
-dataram['pre'] = np.load(join(tem_path,'pre.npy'))
-dataram['gt'] = np.load(join(tem_path,'gt.npy'))
-dataram['init0'] = np.load(join(tem_path,'init0.npy'))
+tem_path_list = listdir(tem_path)
+first_tem = True
+for tem_post in tem_path_list:
+    if first_tem:
+        dataram['template0'] = np.load(join(tem_path, tem_post, 'template0.npy'))
+        dataram['template'] = np.load(join(tem_path,'template.npy'))
+        dataram['templatei'] = np.load(join(tem_path,'templatei.npy'))
+        dataram['pre'] = np.load(join(tem_path,'pre.npy'))
+        dataram['gt'] = np.load(join(tem_path,'gt.npy'))
+        dataram['init0'] = np.load(join(tem_path,'init0.npy'))      
+        first_tem = False
+    else:
+        try:
+            dataram['template0'] = np.concatenate((dataram['template0'], np.load(join(tem_path, tem_post, 'template0.npy'))))
+            dataram['template'] = np.concatenate((dataram['template'], np.load(join(tem_path,'template.npy'))))
+            dataram['templatei'] = np.concatenate((dataram['templatei'], np.load(join(tem_path,'templatei.npy'))))
+            dataram['pre'] = np.concatenate((dataram['pre'], np.load(join(tem_path,'pre.npy'))))
+            dataram['gt'] = np.concatenate((dataram['gt'], np.load(join(tem_path,'gt.npy'))))
+            dataram['init0'] = np.concatenate((dataram['init0'], np.load(join(tem_path,'init0.npy'))))
+        except:
+            print('Read .npy Over.')
 dataram['train'] = np.arange(len(dataram['gt']), dtype=np.int)
+print(dataram['init0'].shape)
 
 cudnn.benchmark = True
 
