@@ -31,8 +31,8 @@ parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
 parser.add_argument('--weight-decay', '--wd', default=5e-5, type=float,
                     metavar='W', help='weight decay (default: 5e-5)')
 
-parser.add_argument('--start-epoch', default=5, type=int, metavar='N', help='manual epoch number (useful on restarts)')
-parser.add_argument('--resume', default='updatenet_trainoutput/lr-4-6/checkpoint5.pth.tar', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
+parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
+parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
 parser.add_argument('--save', '-s', default='./updatenet_trainoutput/', type=str, help='directory for saving')
 parser.add_argument('--save-rate', default=1, type=int, metavar='N', help='number of epochs to save')
 
