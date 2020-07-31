@@ -44,7 +44,7 @@ print(args)
 best_loss = 1e6
 
 dataram = dict()
-tem_path = 'updatenet_dataset/'
+tem_path = 'updatenet_lasot_dataset/'
 tem_path_list = listdir(tem_path)
 first_tem = True
 for tem_post in tem_path_list:
