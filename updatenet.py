@@ -27,7 +27,7 @@ class UpdateResNet(nn.Module):
         x2 = x[:,512:768,:,:]
         response = torch.cat([response, x1], dim=1)
         response = self.update2(response)
-        response = torch.cat([response, x2], dim=1)
+        response = torch.cat([response, x0], dim=1)
         response = self.update3(response)
-        response += x0
+        # response += x0
         return response

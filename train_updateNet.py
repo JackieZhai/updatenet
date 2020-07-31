@@ -20,7 +20,7 @@ parser.add_argument('--epochs', default=50, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--print-freq', '-p', default=200, type=int,
                     metavar='N', help='print frequency (default: 10)')
-parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
+parser.add_argument('-j', '--workers', default=8, type=int, metavar='N',
                     help='number of data loading workers (default: 8)')
 parser.add_argument('-b', '--batch-size', default=64, type=int,
                     metavar='N', help='mini-batch size (default: 32)')
@@ -155,7 +155,7 @@ for ii in np.arange(0,lrs.shape[0]):
             cur = dataram['templatei'][batch]
             init = dataram['template0'][batch-init_index]
             pre = dataram['template'][batch-pre_index]
-            gt = dataram['template0'][batch+gt_index-1]
+            gt = dataram['template0'][batch+gt_index]
             #pdb.set_trace() 
             temp = np.concatenate((init, pre, cur), axis=1)
             input_up = torch.Tensor(temp)
