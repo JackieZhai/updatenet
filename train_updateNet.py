@@ -116,7 +116,7 @@ for ii in np.arange(0,lrs.shape[0]):
     criterion = nn.MSELoss(size_average=False).cuda()
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
                             momentum=args.momentum,
-                            weight_decay=args.weight_decay).cuda()
+                            weight_decay=args.weight_decay)
 
     # optionally resume from a checkpoint
     if args.resume:
